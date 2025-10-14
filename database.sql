@@ -1,0 +1,123 @@
+-- 1. Tabela ENDERECOS (Base)
+CREATE TABLE ENDERECOS (
+    id SERIAL PRIMARY KEY,
+    rua VARCHAR(255) NOT NULL,
+    numero VARCHAR(20),
+    complemento VARCHAR(100),
+    bairro VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100) NOT NULL,
+    estado CHAR(2) NOT NULL,
+    cep CHAR(8),
+    latitude DECIMAL(10, 8),
+    longitude DECIMAL(11, 8)
+);
+
+-- Tabela USUARIOS (Base)
+CREATE TABLE USUARIOS (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    senha_hash VARCHAR(255) NOT NULL,
+    telefone VARCHAR(20),
+    endereco_id INTEGER REFERENCES ENDERECOS(id),
+    data_cadastro TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    ativo BOOLEAN DEFAULT TRUE
+);
+
+-- Tabela INSTITUICOES (Base)
+CREATE TABLE INSTITUICOES (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    cnpj VARCHAR(14) UNIQUE,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    telefone VARCHAR(20),
+    link_site VARCHAR(255),
+    descricao TEXT,
+    endereco_id INTEGER REFERENCES ENDERECOS(id),
+    data_cadastro TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela PETS (Adoção)
+CREATE TABLE PETS (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    especie VARCHAR(50) NOT NULL,
+    raca VARCHAR(100),
+    sexo CHAR(1) NOT NULL, 
+    idade_aproximada VARCHAR(50),
+    porte VARCHAR(50),
+    descricao_saude TEXT,
+    historia TEXT,
+    instituicao_id INTEGER REFERENCES INSTITUICOES(id) NOT NULL,
+    status_adocao VARCHAR(50) NOT NULL 
+);
+
+-- Tabela FOTOS_PET (Adoção)
+CREATE TABLE FOTOS_PET (
+    id SERIAL PRIMARY KEY,
+    pet_id INTEGER REFERENCES PETS(id) NOT NULL,
+    url_foto VARCHAR(255) NOT NULL,
+    principal BOOLEAN DEFAULT FALSE
+);
+
+-- Tabela REQUISITOS_ADOCAO (Adoção - N:N para regras)
+CREATE TABLE REQUISITOS_ADOCAO (
+    id SERIAL PRIMARY KEY,
+    pet_id INTEGER REFERENCES PETS(id) NOT NULL,
+    descricao_requisito VARCHAR(255) NOT NULL
+);
+
+-- Tabela PROCESSO_ADOCAO (Adoção - Rastreamento)
+CREATE TABLE PROCESSO_ADOCAO (
+    id SERIAL PRIMARY KEY,
+    pet_id INTEGER REFERENCES PETS(id) NOT NULL,
+    usuario_id INTEGER REFERENCES USUARIOS(id) NOT NULL,
+    instituicao_id INTEGER REFERENCES INSTITUICOES(id) NOT NULL,
+    data_solicitacao TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(50) NOT NULL 
+);
+
+-- Tabela TIPOS_DOACAO (Doação)
+CREATE TABLE TIPOS_DOACAO (
+    id SERIAL PRIMARY KEY,
+    nome_tipo VARCHAR(100) UNIQUE NOT NULL, 
+    unidade_medida VARCHAR(50) 
+);
+
+-- Tabela DOACOES (Doação)
+CREATE TABLE DOACOES (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER REFERENCES USUARIOS(id) NOT NULL,
+    instituicao_id INTEGER REFERENCES INSTITUICOES(id) NOT NULL,
+    tipo_doacao_id INTEGER REFERENCES TIPOS_DOACAO(id) NOT NULL,
+    quantidade DECIMAL(10, 2) NOT NULL,
+    data_doacao TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    status_entrega VARCHAR(50) 
+);
+
+-- Tabela REPORTES_RESGATE (Localização/Resgate)
+CREATE TABLE REPORTES_RESGATE (
+    id SERIAL PRIMARY KEY,
+    usuario_reporter_id INTEGER REFERENCES USUARIOS(id),
+    data_hora_reporte TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    latitude DECIMAL(10, 8) NOT NULL,
+    longitude DECIMAL(11, 8) NOT NULL,
+    descricao_local TEXT,
+    condicao_animal VARCHAR(100) 
+);
+
+-- Tabela STATUS_RESGATE (Localização/Resgate - Rastreia o processo)
+CREATE TABLE STATUS_RESGATE (
+    id SERIAL PRIMARY KEY,
+    reporte_id INTEGER REFERENCES REPORTES_RESGATE(id) NOT NULL,
+    instituicao_responsavel_id INTEGER REFERENCES INSTITUICOES(id),
+    data_atribuicao TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(50) NOT NULL 
+);
+
+-- Tabela PET_REPORTADO_APOS_RESGATE (Ligação entre Reporte e o Pet formalizado para Adoção)
+CREATE TABLE PET_REPORTADO_APOS_RESGATE (
+    id SERIAL PRIMARY KEY,
+    reporte_id INTEGER REFERENCES REPORTES_RESGATE(id) UNIQUE NOT NULL, 
+    pet_id INTEGER REFERENCES PETS(id) UNIQUE NOT NULL 
+);
