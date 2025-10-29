@@ -7,17 +7,14 @@ export class UsuarioController {
   async criarUsuario(req: Request, res: Response): Promise<void> {
     try {
       const { name, email, password } = req.body;
-      console.log("criando usuário");
 
       if (!name || !email || !password) {
         res.status(400).send("Nome, email e senha são obrigatórios");
         return;
       }
-      console.log("antes do business");
+
       const novoUsuario = await usuarioBusiness.criarUsuario({ name, email, password });
       res.status(201).json(novoUsuario);
-
-
     } catch (error: any) {
       console.error(error);
       if (error.message === "Email já cadastrado") {
