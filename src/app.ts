@@ -1,15 +1,20 @@
+// Este arquivo configura a aplicação principal da API
+// Aqui definimos as configurações básicas e conectamos todas as rotas
+
 import express from "express";
 import cors from "cors";
 import db from "./db";
 import usuarioRoutes from "./routes/usuarioRoutes";
 import petRoutes from "./routes/petRoutes";
+import adocaoRoutes from "./routes/adocaoRoutes";
+import resgateRoutes from "./routes/resgateRoutes";
 
 export const app = express();
 
 app.use(express.json());
+
 app.use(cors());
 
-//Verificação de conexão com o banco de dados
 app.get("/testConnection", async (req, res) => {
   try {
     await db.raw("SELECT 1+1 AS result");
@@ -21,5 +26,7 @@ app.get("/testConnection", async (req, res) => {
 });
 
 //Rotas
-app.use("/", usuarioRoutes);
-app.use("/", petRoutes);
+app.use("/usuarios", usuarioRoutes);
+app.use("/pets", petRoutes);
+app.use("/adocoes", adocaoRoutes);
+app.use("/resgates", resgateRoutes);

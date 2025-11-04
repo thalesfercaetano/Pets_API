@@ -1,20 +1,25 @@
+// Este arquivo define os "modelos" (tipos) relacionados a pets
+
+// Interface para um pet completo
 export interface Pet {
-  id?: number;
-  name: string;
-  type: string;
-  owner_id: number;
+  id?: number;        
+  name: string;       
+  type: string;      
+  owner_id: number;   
 }
 
+// Interface para criar um novo pet (mesma estrutura do Pet)
 export interface PetRequest {
-  name: string;
-  type: string;
-  owner_id: number;
+  name: string;      
+  type: string;       
+  owner_id: number;   
 }
 
+// Interface para retornar dados do pet
 export interface PetResponse {
-  id: number;
-  name: string;
-  type: string;
-  owner_id: number;
+  id: number;         
+  name: string;       
+  type: string;      
+  owner_id: number;   
 }
 

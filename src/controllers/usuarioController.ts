@@ -1,9 +1,13 @@
+// Este arquivo é o Controller de Usuários
+
 import { Request, Response } from "express";
 import { UsuarioBusiness } from "../business/usuarioBusiness";
 
+// Cria uma instância da classe de negócio para usar nos métodos
 const usuarioBusiness = new UsuarioBusiness();
 
 export class UsuarioController {
+  // Rota POST /usuarios - Cria um novo usuário
   async criarUsuario(req: Request, res: Response): Promise<void> {
     try {
       const { name, email, password } = req.body;
@@ -14,9 +18,11 @@ export class UsuarioController {
       }
 
       const novoUsuario = await usuarioBusiness.criarUsuario({ name, email, password });
+      
       res.status(201).json(novoUsuario);
     } catch (error: any) {
       console.error(error);
+      
       if (error.message === "Email já cadastrado") {
         res.status(409).send(error.message);
       } else {
@@ -25,6 +31,7 @@ export class UsuarioController {
     }
   }
 
+  // Rota POST /usuarios/login - Faz o login do usuário
   async login(req: Request, res: Response): Promise<void> {
     try {
       const { email, password } = req.body;
@@ -38,6 +45,7 @@ export class UsuarioController {
       res.status(200).json(result);
     } catch (error: any) {
       console.error(error);
+      
       if (error.message === "Credenciais inválidas") {
         res.status(401).send(error.message);
       } else {
@@ -46,10 +54,17 @@ export class UsuarioController {
     }
   }
 
+  // Rota GET /usuarios/:id - Busca um usuário pelo seu ID
   async buscarUsuarioPorId(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const usuarioId = parseInt(id!);
+      
+      if (!id) {
+        res.status(400).send("ID inválido");
+        return;
+      }
+
+      const usuarioId = parseInt(id);
 
       if (isNaN(usuarioId)) {
         res.status(400).send("ID inválido");
@@ -69,11 +84,18 @@ export class UsuarioController {
     }
   }
 
+  // Rota PATCH /usuarios/:id - Atualiza os dados de um usuário
   async atualizarUsuario(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const { name, email } = req.body;
-      const usuarioId = parseInt(id!);
+      
+      if (!id) {
+        res.status(400).send("ID inválido");
+        return;
+      }
+
+      const usuarioId = parseInt(id);
 
       if (isNaN(usuarioId)) {
         res.status(400).send("ID inválido");
@@ -89,6 +111,7 @@ export class UsuarioController {
       }
     } catch (error: any) {
       console.error(error);
+      
       if (error.message === "Email já está em uso por outro usuário") {
         res.status(409).send(error.message);
       } else {
@@ -97,10 +120,17 @@ export class UsuarioController {
     }
   }
 
+  // Rota DELETE /usuarios/:id - Deleta um usuário
   async deletarUsuario(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const usuarioId = parseInt(id!);
+      
+      if (!id) {
+        res.status(400).send("ID inválido");
+        return;
+      }
+
+      const usuarioId = parseInt(id);
 
       if (isNaN(usuarioId)) {
         res.status(400).send("ID inválido");
