@@ -49,6 +49,13 @@ export async function up(knex: Knex): Promise<void> {
     table.text("descricao_saude");
     table.text("historia");
     table.integer("instituicao_id").notNullable().references("id").inTable("INSTITUICOES");
+    // Campos adicionais para enriquecer o cadastro do pet
+    table.boolean("vacinado").defaultTo(false);
+    table.boolean("castrado").defaultTo(false);
+    table.string("cor", 50);
+    table.timestamp("data_cadastro").defaultTo(knex.fn.now());
+    table.boolean("ativo").defaultTo(true);
+
     table.string("status_adocao", 50).notNullable();
   });
 

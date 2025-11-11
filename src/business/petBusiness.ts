@@ -17,6 +17,11 @@ export class PetBusiness {
       name: pet.nome,
       type: pet.especie,
       owner_id: pet.instituicao_id,
+      vacinado: pet.vacinado,
+      castrado: pet.castrado,
+      cor: pet.cor,
+      data_cadastro: pet.data_cadastro,
+      ativo: pet.ativo,
     }));
   }
 
@@ -30,13 +35,29 @@ export class PetBusiness {
     const [id] = await db("PETS").insert({
       nome: name,
       especie: type,
-      sexo: "N", 
+      sexo: "N",
       instituicao_id: owner_id,
+      vacinado: pet.vacinado ?? false,
+      castrado: pet.castrado ?? false,
+      cor: pet.cor ?? null,
+      ativo: pet.ativo ?? true,
       status_adocao: "disponível",
     });
 
     // Retorna os dados do pet criado
-    return { id: id!, name, type, owner_id };
+    const novoPet: any = {
+      id: id!,
+      name,
+      type,
+      owner_id,
+      vacinado: pet.vacinado ?? false,
+      castrado: pet.castrado ?? false,
+      ativo: pet.ativo ?? true,
+    };
+
+    if (pet.cor !== undefined) novoPet.cor = pet.cor;
+
+    return novoPet as PetResponse;
   }
 
   // Busca um pet específico pelo seu ID
@@ -55,6 +76,11 @@ export class PetBusiness {
       name: pet.nome,
       type: pet.especie,
       owner_id: pet.instituicao_id,
+      vacinado: pet.vacinado,
+      castrado: pet.castrado,
+      cor: pet.cor,
+      data_cadastro: pet.data_cadastro,
+      ativo: pet.ativo,
     };
   }
 

@@ -49,6 +49,12 @@ CREATE TABLE PETS (
     descricao_saude TEXT,
     historia TEXT,
     instituicao_id INTEGER REFERENCES INSTITUICOES(id) NOT NULL,
+    -- Campos adicionais
+    vacinado BOOLEAN DEFAULT FALSE,
+    castrado BOOLEAN DEFAULT FALSE,
+    cor VARCHAR(50),
+    data_cadastro TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    ativo BOOLEAN DEFAULT TRUE,
     status_adocao VARCHAR(50) NOT NULL 
 );
 

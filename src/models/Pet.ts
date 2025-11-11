@@ -6,6 +6,11 @@ export interface Pet {
   name: string;       
   type: string;      
   owner_id: number;   
+  vacinado?: boolean;
+  castrado?: boolean;
+  cor?: string;
+  data_cadastro?: string;
+  ativo?: boolean;
 }
 
 // Interface para criar um novo pet (mesma estrutura do Pet)
@@ -13,6 +18,9 @@ export interface PetRequest {
   name: string;      
   type: string;       
   owner_id: number;   
+  vacinado?: boolean;
+  castrado?: boolean;
+  cor?: string;
 }
 
 // Interface para retornar dados do pet
@@ -21,5 +29,10 @@ export interface PetResponse {
   name: string;       
   type: string;      
   owner_id: number;   
+  vacinado?: boolean;
+  castrado?: boolean;
+  cor?: string;
+  data_cadastro?: string;
+  ativo?: boolean;
 }
 
