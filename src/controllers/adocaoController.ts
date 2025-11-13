@@ -47,4 +47,36 @@ export class AdocaoController {
       res.status(500).send({ error: "Erro ao atualizar status." });
     }
   }
+
+  // Rota GET /adocoes/usuario/:id - Lista todas as solicitações de adoção de um usuário
+  async listarAdocoesPorUsuario(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      // Valida o parâmetro recebido na rota
+      if (!id) {
+        return res.status(400).send({ error: "ID inválido." });
+      }
+
+      const usuarioId = Number(id);
+
+      if (isNaN(usuarioId)) {
+        return res.status(400).send({ error: "ID inválido." });
+      }
+
+      // Chama a camada de negócio para buscar as solicitações
+      const resultado = await adocaoBusiness.listarAdocoesPorUsuario(usuarioId);
+
+      // Se o usuário não existir, retorna 404 com a mensagem solicitada
+      if (!resultado.usuarioExiste) {
+        return res.status(404).send({ error: "Usuário não encontrado" });
+      }
+
+      
+      res.status(200).json(resultado.adocoes);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: "Erro ao buscar solicitações de adoção." });
+    }
+  }
 }

@@ -9,3 +9,15 @@ export interface Adocao {
   status?: string;          
   data_solicitacao?: Date;  
 }
+
+// Interface para representar os dados completos de uma solicitação de adoção
+export interface AdocaoDetalhada {
+  id: number;
+  petId: number;
+  petName: string | null;
+  petSpecies: string | null;
+  status: string;
+  requestDate: Date;
+  institutionId: number | null;
+  institutionName: string | null;
+}
