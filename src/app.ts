@@ -8,6 +8,7 @@ import usuarioRoutes from "./routes/usuarioRoutes";
 import petRoutes from "./routes/petRoutes";
 import adocaoRoutes from "./routes/adocaoRoutes";
 import resgateRoutes from "./routes/resgateRoutes";
+import doacaoRoutes from "./routes/doacaoRoutes";
 
 export const app = express();
 
@@ -30,3 +31,4 @@ app.use("/usuarios", usuarioRoutes);
 app.use("/pets", petRoutes);
 app.use("/adocoes", adocaoRoutes);
 app.use("/resgates", resgateRoutes);
+app.use("/doacoes", doacaoRoutes);
