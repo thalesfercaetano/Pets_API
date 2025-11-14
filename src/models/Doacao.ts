@@ -21,3 +21,16 @@ export interface DoacaoResponse {
   statusEntrega: string | null;
 }
 
+// Interface para representar os dados completos de uma doação listada
+export interface DoacaoDetalhada {
+  id: number;
+  usuarioId: number;
+  usuarioNome: string | null;
+  instituicaoId: number;
+  tipoDoacaoId: number;
+  tipoDoacaoNome: string | null;
+  quantidade: number;
+  dataDoacao: Date;
+  statusEntrega: string | null;
+}
+

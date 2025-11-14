@@ -48,5 +48,37 @@ export class DoacaoController {
       res.status(500).send({ error: "Erro ao registrar doação." });
     }
   }
+
+  // Rota GET /doacoes/instituicao/:id - Lista todas as doações recebidas por uma instituição
+  async listarDoacoesPorInstituicao(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      // Valida o parâmetro recebido na rota
+      if (!id) {
+        return res.status(400).send({ error: "ID inválido." });
+      }
+
+      const instituicaoId = Number(id);
+
+      if (isNaN(instituicaoId)) {
+        return res.status(400).send({ error: "ID inválido." });
+      }
+
+      // Chama a camada de negócio para buscar as doações
+      const resultado = await doacaoBusiness.listarDoacoesPorInstituicao(instituicaoId);
+
+      // Se a instituição não existir, retorna 404 com a mensagem solicitada
+      if (!resultado.instituicaoExiste) {
+        return res.status(404).send({ error: "Instituição não encontrada" });
+      }
+
+      // Retorna as doações (array vazio se não houver doações, com status 200)
+      res.status(200).json(resultado.doacoes);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: "Erro ao buscar doações da instituição." });
+    }
+  }
 }
 

@@ -12,5 +12,8 @@ const doacaoController = new DoacaoController();
 // POST /doacoes - Registra uma nova doação de item
 router.post("/", doacaoController.registrarDoacao);
 
+// GET /doacoes/instituicao/:id - Lista todas as doações recebidas por uma instituição
+router.get("/instituicao/:id", doacaoController.listarDoacoesPorInstituicao);
+
 export default router;
 
