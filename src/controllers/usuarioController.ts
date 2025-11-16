@@ -11,7 +11,6 @@ export class UsuarioController {
   async criarUsuario(req: Request, res: Response): Promise<void> {
     try {
       const { name, email, password } = req.body;
-
       if (!name || !email || !password) {
         res.status(400).send("Nome, email e senha são obrigatórios");
         return;

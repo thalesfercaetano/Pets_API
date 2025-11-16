@@ -17,19 +17,23 @@ export class UsuarioBusiness {
     const usuarioExistente = await db("USUARIOS").where({ email }).first();
     
     if (usuarioExistente) {
-      throw new Error("Email já cadastrado");
+      throw new Error("Email já cadastrado"); 
     }
 
     const senhaHash = await bcrypt.hash(password, 10);
 
-    const [id] = await db("USUARIOS").insert({
+    await db("USUARIOS").insert({
       nome: name,
       email,
       senha_hash: senhaHash,
     });
 
+    const userCriado = await db("USUARIOS").where({ email }).first();
+
+    const id: number = userCriado.id;
+
     // Retorna os dados do usuário criado (sem a senha, claro!)
-    return { id: id!, name, email };
+    return { id , name, email };
   }
 
   // Faz o login do usuário e gera um token de autenticação
