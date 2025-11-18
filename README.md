@@ -1,5 +1,6 @@
 Pets API  
-Esta é uma API back-end desenvolvida em Node.js e TypeScript para gerenciar um sistema de adoção, resgate e doação de animais. A API utiliza Express para o roteamento, Knex.js para interação com o banco de dados PostgreSQL e autenticação baseada em JWT.
+Esta é uma API back-end desenvolvida em Node.js e TypeScript para gerenciar um sistema de adoção, resgate e doação de animais. 
+A API utiliza Express para o roteamento, Knex.js para interação com o banco de dados PostgreSQL e autenticação baseada em JWT.
 
 Funcionalidades Principais:
 - Gerenciamento de Usuários: Cadastro e login de usuários com autenticação via JWT (JSON Web Token).
@@ -54,13 +55,14 @@ Configuração do Servidor
 
 Instalação e Configuração:
 
-1- Clone o repositório.
-2- Instale as dependências:
-  - npm install
-3- Configure seu banco de dados PostgreSQL e crie os bancos de dados para desenvolvimento (PETS_API) e teste (PETS_API_TEST).
-4- Configure o arquivo .env com suas credenciais do banco de dados.
-5- Execute as migrações do Knex para criar as tabelas:
-  - npx knex migrate:latest --env development
+ - Clone o repositório.
+ - Instale as dependências:
+   - npm install
+     
+ - Configure seu banco de dados PostgreSQL e crie os bancos de dados para desenvolvimento (PETS_API) e teste (PETS_API_TEST).
+ - Configure o arquivo .env com suas credenciais do banco de dados.
+ - Execute as migrações do Knex para criar as tabelas:
+ - npx knex migrate:latest --env development
 
 Executando a Aplicação
  Modo de Desenvolvimento
@@ -69,10 +71,10 @@ Executando a Aplicação
 
 Produção
 Para compilar o projeto TypeScript para JavaScript e iniciar o servidor em modo de produção:
-        # 1. Compilar o projeto
-        - npm run build
-        # 2. Iniciar o servidor
-        - npm run start
+ - Compilar o projeto
+     - npm run build
+ - Iniciar o servidor
+     - npm run start
 
 Testes
 Para executar a suíte de testes (utilizando o banco de dados de teste):
