@@ -1,8 +1,7 @@
-// c:\Users\User\Pets_API-1\src\business\adocaoBusiness.test.ts
-import { AdocaoBusiness } from './adocaoBusiness';
-import db from '../db';
+import { AdocaoBusiness } from '../../src/business/adocaoBusiness';
+import db from '../../src/db';
 
-jest.mock('../db');
+jest.mock('../../src/db');
 
 const mockedDb = db as jest.MockedFunction<typeof db>;
 const adocaoBusiness = new AdocaoBusiness();
@@ -54,3 +53,4 @@ describe('AdocaoBusiness', () => {
     });
   });
 });
+

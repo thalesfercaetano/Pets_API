@@ -1,8 +1,7 @@
-// c:\Users\User\Pets_API-1\src\business\petBusiness.test.ts
-import { PetBusiness } from './petBusiness';
-import db from '../db';
+import { PetBusiness } from '../../src/business/petBusiness';
+import db from '../../src/db';
 
-jest.mock('../db');
+jest.mock('../../src/db');
 
 const mockedDb = db as jest.MockedFunction<typeof db>;
 const petBusiness = new PetBusiness();
@@ -68,3 +67,4 @@ describe('PetBusiness', () => {
     expect(await petBusiness.deletarPet(2)).toBe(false);
   });
 });
+

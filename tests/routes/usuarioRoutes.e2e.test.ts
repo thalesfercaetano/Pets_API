@@ -1,6 +1,6 @@
 import supertest from 'supertest';
-import { app } from '../app'; 
-import db from '../db';    
+import { app } from '../../src/app'; 
+import db from '../../src/db';    
 import bcrypt from 'bcryptjs'; 
 
 // Criamos um 'agente' do supertest para fazer requisições na nossa 'app'
@@ -8,7 +8,6 @@ import bcrypt from 'bcryptjs';
 const request = supertest(app);
 let dbReady = true;
 
-// Descrevemos o conjunto de testes para as rotas de Usuário
 describe('Testes E2E para /usuarios', () => {
   
   beforeAll(async () => {

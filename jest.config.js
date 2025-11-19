@@ -5,7 +5,7 @@ module.exports = {
   
   clearMocks: true,
 
-  roots: ['<rootDir>/src'],
+  roots: ['<rootDir>/src', '<rootDir>/tests'],
 
   testPathIgnorePatterns: ['/node_modules/', '/dist/'],
 };

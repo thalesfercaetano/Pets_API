@@ -1,10 +1,10 @@
-import { UsuarioBusiness } from './usuarioBusiness';
-import db from '../db'; 
+import { UsuarioBusiness } from '../../src/business/usuarioBusiness';
+import db from '../../src/db'; 
 import bcrypt from 'bcryptjs'; 
 import jwt from 'jsonwebtoken'; 
 
 // 1. SIMULANDO (MOCKANDO) OS MÓDULOS
-jest.mock('../db');
+jest.mock('../../src/db');
 jest.mock('bcryptjs');
 jest.mock('jsonwebtoken');
 
@@ -174,3 +174,4 @@ describe('Testes para UsuarioBusiness', () => {
     });
   });
 });
+

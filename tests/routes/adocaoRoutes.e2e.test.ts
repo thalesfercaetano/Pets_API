@@ -1,7 +1,6 @@
-// c:\Users\User\Pets_API-1\src\routes\adocaoRoutes.e2e.test.ts
 import supertest from 'supertest';
-import { app } from '../app';
-import db from '../db';
+import { app } from '../../src/app';
+import db from '../../src/db';
 
 const request = supertest(app);
 let dbReady = true;
@@ -99,3 +98,4 @@ describe('E2E /adocoes', () => {
     });
   });
 });
+

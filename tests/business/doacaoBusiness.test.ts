@@ -1,8 +1,7 @@
-// c:\Users\User\Pets_API-1\src\business\doacaoBusiness.test.ts
-import { DoacaoBusiness } from './doacaoBusiness';
-import db from '../db';
+import { DoacaoBusiness } from '../../src/business/doacaoBusiness';
+import db from '../../src/db';
 
-jest.mock('../db');
+jest.mock('../../src/db');
 
 const mockedDb = db as jest.MockedFunction<typeof db>;
 const doacaoBusiness = new DoacaoBusiness();
@@ -58,3 +57,4 @@ describe('DoacaoBusiness', () => {
     });
   });
 });
+
