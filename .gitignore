@@ -1,3 +1,10 @@
-/node_modules
-/dist
-/.env 
+# Dependências
+node_modules/
+
+# Build / Compilados
+dist/
+build/
+
+# Variáveis de Ambiente (CRÍTICO: nunca commitar o .env real)
+.env
+.env.test
