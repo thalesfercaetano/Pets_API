@@ -9,6 +9,8 @@ import petRoutes from "./routes/petRoutes";
 import adocaoRoutes from "./routes/adocaoRoutes";
 import resgateRoutes from "./routes/resgateRoutes";
 import doacaoRoutes from "./routes/doacaoRoutes";
+import instituicaoRoutes from "./routes/instituicaoRoutes";
+import enderecoRoutes from "./routes/enderecoRoutes";
 
 export const app = express();
 
@@ -32,3 +34,5 @@ app.use("/pets", petRoutes);
 app.use("/adocoes", adocaoRoutes);
 app.use("/resgates", resgateRoutes);
 app.use("/doacoes", doacaoRoutes);
+app.use("/instituicoes", instituicaoRoutes);
+app.use("/enderecos", enderecoRoutes);
