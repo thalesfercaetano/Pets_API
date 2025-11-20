@@ -1,98 +1,233 @@
-import supertest from 'supertest';
-import { app } from '../../src/app';
-import db from '../../src/db';
+import supertest from "supertest";
+import { app } from "../../src/app";
+import db from "../../src/db";
 
 const request = supertest(app);
 let dbReady = true;
 
-describe('E2E /doacoes', () => {
+describe("E2E /adocoes", () => {
   beforeAll(async () => {
-    try { await db.migrate.latest(); } catch (e) { dbReady = false; console.error('Falha migrar (doacoes):', e); }
+    try {
+      await db.migrate.latest();
+    } catch (e) {
+      dbReady = false;
+      console.error("Falha migrar (adocoes):", e);
+    }
   });
 
   afterEach(async () => {
     if (!dbReady) return;
     try {
-      await db('DOACOES').del();
-      await db('TIPOS_DOACAO').del();
-      await db('USUARIOS').del();
-      await db('INSTITUICOES').del();
-    } catch (e) { console.error('Falha limpar (doacoes):', e); }
+      await db("PROCESSO_ADOCAO").del();
+      await db("PETS").del();
+      await db("USUARIOS").del();
+      await db("INSTITUICOES").del();
+    } catch (e) {
+      console.error("Falha limpar (adocoes):", e);
+    }
   });
 
-  afterAll(async () => { try { await db.destroy(); } catch (e) { console.error(e); } });
+  afterAll(async () => {
+    try {
+      await db.destroy();
+    } catch (e) {
+      console.error(e);
+    }
+  });
 
-  describe('POST /doacoes', () => {
-    it('registra doação e retorna 201', async () => {
-      if (!dbReady) { console.warn('DB indisponível; ignorando teste'); return; }
-      const [instId] = await db('INSTITUICOES').insert({ nome: 'ONG D', email: 'd@ong.com' });
-      const [userId] = await db('USUARIOS').insert({ nome: 'Doador', email: 'doador@x.com', senha_hash: 'hash' });
-      const [tipoId] = await db('TIPOS_DOACAO').insert({ nome_tipo: 'Ração', unidade_medida: 'kg' });
+  describe("POST /adocoes", () => {
+    it("cria solicitação com sucesso (201)", async () => {
+      if (!dbReady) {
+        console.warn("DB indisponível; ignorando teste");
+        return;
+      }
+      const [{ id: instId }] = await db("INSTITUICOES")
+        .insert({ nome: "ONG X", email: "x@ong.com" })
+        .returning("id");
 
-      const res = await request.post('/doacoes').send({
-        usuario_id: Number(userId),
-        instituicao_id: Number(instId),
-        tipo_doacao_id: Number(tipoId),
-        quantidade: 5
-      });
+      const [{ id: userId }] = await db("USUARIOS")
+        .insert({
+          nome: "User",
+          email: "user@x.com",
+          senha_hash: "hash",
+        })
+        .returning("id");
+
+      const [{ id: petId }] = await db("PETS")
+        .insert({
+          nome: "Pipoca",
+          especie: "Gato",
+          sexo: "F",
+          instituicao_id: Number(instId),
+          status_adocao: "disponível",
+        })
+        .returning("id");
+
+      const res = await request
+        .post("/adocoes")
+        .send({ usuario_id: Number(userId), pet_id: Number(petId) });
 
       expect(res.status).toBe(201);
-      expect(res.body.message).toBe('Doação registrada com sucesso!');
-      expect(res.body.doacao).toMatchObject({ usuarioId: Number(userId), instituicaoId: Number(instId), tipoDoacaoId: Number(tipoId), quantidade: 5 });
-      const registro = await db('DOACOES').where({ usuario_id: Number(userId), instituicao_id: Number(instId) }).first();
-      expect(registro).toBeDefined();
+      expect(res.body).toEqual({
+        message: "Solicitação de adoção registrada!",
+      });
+
+      const pa = await db("PROCESSO_ADOCAO")
+        .where({ pet_id: Number(petId), usuario_id: Number(userId) })
+        .first();
+      expect(pa).toBeDefined();
     });
 
-    it('retorna 400 quando faltam campos', async () => {
-      const res = await request.post('/doacoes').send({ usuario_id: 1, quantidade: 2 });
+    it("retorna 400 quando faltam campos", async () => {
+      const res = await request.post("/adocoes").send({ usuario_id: 1 });
       expect(res.status).toBe(400);
     });
 
-    it('retorna 404 quando usuário não existe', async () => {
-      if (!dbReady) { console.warn('DB indisponível; ignorando teste'); return; }
-      const [instId] = await db('INSTITUICOES').insert({ nome: 'ONG E', email: 'e@ong.com' });
-      const [tipoId] = await db('TIPOS_DOACAO').insert({ nome_tipo: 'Medicamento', unidade_medida: 'un' });
-      const res = await request.post('/doacoes').send({
-        usuario_id: 999999,
-        instituicao_id: Number(instId),
-        tipo_doacao_id: Number(tipoId),
-        quantidade: 1
-      });
-      expect(res.status).toBe(404);
-      expect(res.body.error).toBe('Usuário não encontrado');
-    });
+    it("retorna 500 quando pet não existe", async () => {
+      if (!dbReady) {
+        console.warn("DB indisponível; ignorando teste");
+        return;
+      }
+      const [{ id: userId }] = await db("USUARIOS")
+        .insert({
+          nome: "User2",
+          email: "user2@x.com",
+          senha_hash: "hash",
+        })
+        .returning("id");
 
-    it('retorna 400 quando quantidade inválida', async () => {
-      const res = await request.post('/doacoes').send({
-        usuario_id: 1,
-        instituicao_id: 1,
-        tipo_doacao_id: 1,
-        quantidade: 0
-      });
-      expect(res.status).toBe(400);
+      const res = await request
+        .post("/adocoes")
+        .send({ usuario_id: Number(userId), pet_id: 999999 });
+
+      expect(res.status).toBe(500);
+      expect(res.body.error).toBe("Erro ao registrar adoção.");
     });
   });
 
-  describe('GET /doacoes/instituicao/:id', () => {
-    it('retorna 404 quando instituição não existe', async () => {
-      if (!dbReady) { console.warn('DB indisponível; ignorando teste'); return; }
-      const res = await request.get('/doacoes/instituicao/999999');
-      expect(res.status).toBe(404);
-      expect(res.body.error).toBe('Instituição não encontrada');
+  describe("PATCH /adocoes/:id/status", () => {
+    it("atualiza status com sucesso", async () => {
+      if (!dbReady) {
+        console.warn("DB indisponível; ignorando teste");
+        return;
+      }
+      const [{ id: instId }] = await db("INSTITUICOES")
+        .insert({
+          nome: "ONG Y",
+          email: "y@ong.com",
+        })
+        .returning("id");
+
+      const [{ id: userId }] = await db("USUARIOS")
+        .insert({
+          nome: "User3",
+          email: "user3@x.com",
+          senha_hash: "hash",
+        })
+        .returning("id");
+
+      const [{ id: petId }] = await db("PETS")
+        .insert({
+          nome: "Toby",
+          especie: "Cachorro",
+          sexo: "M",
+          instituicao_id: Number(instId),
+          status_adocao: "disponível",
+        })
+        .returning("id");
+
+      const [{ id: paId }] = await db("PROCESSO_ADOCAO")
+        .insert({
+          pet_id: Number(petId),
+          usuario_id: Number(userId),
+          instituicao_id: Number(instId),
+          status: "pendente",
+        })
+        .returning("id");
+
+      const res = await request
+        .patch(`/adocoes/${paId}/status`)
+        .send({ status: "aprovada" });
+
+      expect(res.status).toBe(200);
+
+      const updated = await db("PROCESSO_ADOCAO")
+        .where({ id: Number(paId) })
+        .first();
+      expect(updated.status).toBe("aprovada");
     });
 
-    it('retorna 200 com lista de doações', async () => {
-      if (!dbReady) { console.warn('DB indisponível; ignorando teste'); return; }
-      const [instId] = await db('INSTITUICOES').insert({ nome: 'ONG F', email: 'f@ong.com' });
-      const [userId] = await db('USUARIOS').insert({ nome: 'Doador2', email: 'doador2@x.com', senha_hash: 'hash' });
-      const [tipoId] = await db('TIPOS_DOACAO').insert({ nome_tipo: 'Ração', unidade_medida: 'kg' });
-      await db('DOACOES').insert({ usuario_id: Number(userId), instituicao_id: Number(instId), tipo_doacao_id: Number(tipoId), quantidade: 3, status_entrega: 'pendente' });
+    it("retorna 400 quando status inválido", async () => {
+      const res = await request
+        .patch("/adocoes/1/status")
+        .send({ status: "invalido" });
+      expect(res.status).toBe(400);
+    });
 
-      const res = await request.get(`/doacoes/instituicao/${Number(instId)}`);
+    it("retorna 404 quando adoção não existe", async () => {
+      if (!dbReady) {
+        console.warn("DB indisponível; ignorando teste");
+        return;
+      }
+      const res = await request
+        .patch("/adocoes/999999/status")
+        .send({ status: "pendente" });
+      expect(res.status).toBe(404);
+    });
+  });
+
+  describe("GET /adocoes/usuario/:id", () => {
+    it("retorna 404 quando usuário não existe", async () => {
+      if (!dbReady) {
+        console.warn("DB indisponível; ignorando teste");
+        return;
+      }
+      const res = await request.get("/adocoes/usuario/999999");
+      expect(res.status).toBe(404);
+      expect(res.body.error).toBe("Usuário não encontrado");
+    });
+
+    it("retorna 200 com lista de adoções do usuário", async () => {
+      if (!dbReady) {
+        console.warn("DB indisponível; ignorando teste");
+        return;
+      }
+      const [{ id: instId }] = await db("INSTITUICOES")
+        .insert({
+          nome: "ONG Z",
+          email: "z@ong.com",
+        })
+        .returning("id");
+
+      const [{ id: userId }] = await db("USUARIOS")
+        .insert({
+          nome: "User4",
+          email: "user4@x.com",
+          senha_hash: "hash",
+        })
+        .returning("id");
+
+      const [{ id: petId }] = await db("PETS")
+        .insert({
+          nome: "Nina",
+          especie: "Gato",
+          sexo: "F",
+          instituicao_id: Number(instId),
+          status_adocao: "disponível",
+        })
+        .returning("id");
+
+      await db("PROCESSO_ADOCAO").insert({
+        pet_id: Number(petId),
+        usuario_id: Number(userId),
+        instituicao_id: Number(instId),
+        status: "pendente",
+      });
+
+      const res = await request.get(`/adocoes/usuario/${Number(userId)}`);
       expect(res.status).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
       expect(res.body.length).toBeGreaterThanOrEqual(1);
     });
   });
 });
-
