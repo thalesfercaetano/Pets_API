@@ -11,6 +11,7 @@ import resgateRoutes from "./routes/resgateRoutes";
 import doacaoRoutes from "./routes/doacaoRoutes";
 import instituicaoRoutes from "./routes/instituicaoRoutes";
 import enderecoRoutes from "./routes/enderecoRoutes";
+import matchRoutes from "./routes/matchRoutes";
 
 export const app = express();
 
@@ -36,3 +37,4 @@ app.use("/resgates", resgateRoutes);
 app.use("/doacoes", doacaoRoutes);
 app.use("/instituicoes", instituicaoRoutes);
 app.use("/enderecos", enderecoRoutes);
+app.use("/matches", matchRoutes);
