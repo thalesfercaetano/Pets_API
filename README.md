@@ -4,7 +4,7 @@ API RESTful desenvolvida em Node.js e TypeScript para gerenciar um ecossistema c
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - **Node.js**
 - **TypeScript**
@@ -17,20 +17,20 @@ API RESTful desenvolvida em Node.js e TypeScript para gerenciar um ecossistema c
 
 ---
 
-## 📋 Funcionalidades
+## Funcionalidades
 
-- **👤 Usuários:** cadastro, login, edição e remoção.
-- **🏢 Instituições:** CRUD completo com validações.
-- **🐶 Pets:** cadastro, listagem, atualização e remoção.
-- **❤️ Matches estilo Tinder:** likes e passes entre usuários e pets/instituições.
-- **🏠 Adoções:** solicitação, aprovação e gerenciamento.
-- **🆘 Resgates:** reporte e acompanhamento de animais abandonados.
-- **📦 Doações:** registro e controle de doações para instituições.
-- **📍 Endereços:** gerenciamento padronizado de endereços no sistema.
+- ** Usuários:** cadastro, login, edição e remoção.
+- ** Instituições:** CRUD completo com validações.
+- ** Pets:** cadastro, listagem, atualização e remoção.
+- ** Matches estilo Tinder:** likes e passes entre usuários e pets/instituições.
+- ** Adoções:** solicitação, aprovação e gerenciamento.
+- ** Resgates:** reporte e acompanhamento de animais abandonados.
+- ** Doações:** registro e controle de doações para instituições.
+- ** Endereços:** gerenciamento padronizado de endereços no sistema.
 
 ---
 
-## 🛠️ Instalação e Configuração
+## Instalação e Configuração
 
 ### ✔ Pré-requisitos
 - Node.js 16+
