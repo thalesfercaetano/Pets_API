@@ -1,142 +1,171 @@
-*PESQUISA PETLOG*
-https://docs.google.com/forms/d/e/1FAIpQLSdqN2_lq5C8mSnM0WKCCpdkMUx85_SaUGCEhcExmbdWFieyHw/viewform?usp=publish-editor
+# 🐾 Pets API
 
+API RESTful desenvolvida em Node.js e TypeScript para gerenciar um ecossistema completo de adoção de animais. O sistema conecta usuários, instituições e pets, permitindo adoções, doações, resgates e um sistema de "match" entre adotantes e animais.
 
-Pets API  
-Esta é uma API back-end desenvolvida em Node.js e TypeScript para gerenciar um sistema de adoção, resgate e doação de animais. 
-A API utiliza Express para o roteamento, Knex.js para interação com o banco de dados PostgreSQL e autenticação baseada em JWT.
+---
 
-Funcionalidades Principais:
-- Gerenciamento de Usuários: Cadastro e login de usuários com autenticação via JWT (JSON Web Token).
-- Gerenciamento de Pets: CRUD completo para animais disponíveis para adoção.
-- Processo de Adoção: Usuários podem solicitar a adoção de um pet e as instituições podem atualizar o status dessa solicitação.
-- Reporte de Resgates: Usuários podem reportar animais em situação de risco para que instituições possam resgatá-los.
-- Registro de Doações: Usuários podem registrar doações (como ração, medicamentos, etc.) para instituições específicas.
+## 🚀 Tecnologias Utilizadas
 
-Tecnologias Utilizadas:
-- Back-end: Node.js
-- Linguagem: TypeScript
-- Framework: Express.js
-- Banco de Dados: PostgreSQL
-- Query Builder: Knex.js
-- Autenticação: JSON Web Token (jsonwebtoken)
-- Hash de Senhas: Bcrypt.js
-- Testes: Jest e Supertest
-- Variáveis de Ambiente: dotenv
-- CORS: cors
+- **Node.js**
+- **TypeScript**
+- **Express.js**
+- **PostgreSQL**
+- **Knex.js**
+- **JWT (Autenticação)**
+- **Bcrypt.js**
+- **Jest + Supertest**
 
+---
 
-Estrutura do Banco de Dados:
-O banco de dados PostgreSQL é estruturado pelas seguintes tabelas principais:
-- ENDERECOS: Armazena informações de endereço para usuários e instituições.
-- USUARIOS: Gerencia os usuários finais da aplicação, incluindo dados de login.
-- INSTITUICOES: Armazena dados das ONGs e abrigos.
-- PETS: Tabela central dos animais, ligada a uma INSTITUICAO_ID.
-- FOTOS_PET: Armazena URLs de fotos dos pets.
-- PROCESSO_ADOCAO: Rastreia o status das solicitações de adoção feitas por USUARIOS para PETS.
-- DOACOES: Registra doações feitas por USUARIOS para INSTITUICOES.
-- REPORTES_RESGATE: Armazena reportes de animais necessitando resgate, feitos por usuários.
-- STATUS_RESGATE: Rastreia o andamento de um REPORTE_RESGATE.
+## 📋 Funcionalidades
 
+- **👤 Usuários:** cadastro, login, edição e remoção.
+- **🏢 Instituições:** CRUD completo com validações.
+- **🐶 Pets:** cadastro, listagem, atualização e remoção.
+- **❤️ Matches estilo Tinder:** likes e passes entre usuários e pets/instituições.
+- **🏠 Adoções:** solicitação, aprovação e gerenciamento.
+- **🆘 Resgates:** reporte e acompanhamento de animais abandonados.
+- **📦 Doações:** registro e controle de doações para instituições.
+- **📍 Endereços:** gerenciamento padronizado de endereços no sistema.
 
-Variáveis de Ambiente
-Configuração do Banco de Dados (Development)
-  - DB_CLIENT=pg
-  - DB_HOST=localhost
-  - DB_PORT=5432
-  - DB_USER=postgres
-  - DB_PASSWORD=1234
-  - DB_NAME=PETS_API
+---
 
-Configuração do Banco de Dados (Test)
-  - DB_NAME_TEST=PETS_API_TEST
+## 🛠️ Instalação e Configuração
 
-Configuração do Servidor
-  - PORT=3003
+### ✔ Pré-requisitos
+- Node.js 16+
+- PostgreSQL instalado e rodando
+- NPM ou Yarn
 
- Segurança
-  - JWT_SECRET=sua_chave_secreta_aqui
+### 1. Clone o repositório
 
-Instalação e Configuração:
+```bash
+git clone https://github.com/thalesfercaetano/Pets_API.git
+cd Pets_API
+```
 
- - Clone o repositório.
- - Instale as dependências:
-   - npm install
-     
- - Configure seu banco de dados PostgreSQL e crie os bancos de dados para desenvolvimento (PETS_API) e teste (PETS_API_TEST).
- - Configure o arquivo .env com suas credenciais do banco de dados.
- - Execute as migrações do Knex para criar as tabelas:
- - npx knex migrate:latest --env development
+### 2. Instale as dependências
 
-Executando a Aplicação
- Modo de Desenvolvimento
- Para rodar o servidor em modo de desenvolvimento com hot-reload:
-        -npm run dev
+```bash
+npm install
+```
 
-Produção
-Para compilar o projeto TypeScript para JavaScript e iniciar o servidor em modo de produção:
- - Compilar o projeto
-     - npm run build
- - Iniciar o servidor
-     - npm run start
+### 3. Configure o arquivo `.env`
 
-Testes
-Para executar a suíte de testes (utilizando o banco de dados de teste):
-        - npm run test
+Crie um `.env` na raiz baseado no `.env.example`:
 
-Endpoints da API:
-A API está estruturada com as seguintes rotas base:
-- /usuarios
-- /pets
-- /adocoes
-- /resgates
-- /doacoes
+```ini
+# Banco principal
+DB_CLIENT=pg
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=SUASENHA
+DB_NAME=PETS_API
 
-Usuários (/usuarios):
-- POST /: Cadastra um novo usuário.
-- POST /login: Autentica um usuário e retorna um token JWT.
-- GET /:id: Busca um usuário pelo ID.
-- PATCH /:id: Atualiza nome ou email de um usuário.
-- DELETE /:id: Exclui um usuário.
+# Banco de testes
+DB_HOST_TEST=localhost
+DB_PORT_TEST=5432
+DB_USER_TEST=postgres
+DB_PASSWORD_TEST=SUASENHA
+DB_NAME_TEST=PETS_API_TEST
 
-Pets (/pets):
-- GET /: Lista todos os pets cadastrados.
-- POST /: Cadastra um novo pet.
-- GET /:id: Busca um pet específico pelo ID.
-- PATCH /:id: Atualiza os dados de um pet.
-- DELETE /:id: Remove um pet do sistema.
+PORT=3003
+JWT_SECRET=minha_chave_secreta
+```
 
-Adoções (/adocoes):
-- POST /: Cria uma nova solicitação de adoção (usuário quer adotar um pet).
-- PATCH /:id/status: Atualiza o status de uma adoção (ex: "aprovada", "recusada").
-- GET /usuario/:id: Lista todas as solicitações de adoção de um usuário específico.
+### 4. Execute as migrações
 
-Doações (/doacoes):
-- POST /: Registra uma nova doação de item (ex: ração, dinheiro) para uma instituição.
-- GET /instituicao/:id: Lista todas as doações recebidas por uma instituição específica.
+```bash
+npx knex migrate:latest
+```
 
-Resgates (/resgates):
-- POST /reportar: Cria um novo reporte de animal que precisa ser resgatado.
-  
+### 5. Execute a aplicação
 
+**Modo desenvolvimento:**
 
+```bash
+npm run dev
+```
 
+**Produção:**
 
+```bash
+npm run build
+npm start
+```
 
+**Rodar testes:**
 
+```bash
+npm test
+```
 
+---
 
+## 🔗 Endpoints da API
 
+### 👤 Usuários (`/usuarios`)
+- `POST /usuarios`
+- `POST /usuarios/login`
+- `GET /usuarios/:id`
+- `PATCH /usuarios/:id`
+- `DELETE /usuarios/:id`
 
+### 🏢 Instituições (`/instituicoes`)
+- `GET /instituicoes`
+- `POST /instituicoes`
+- `GET /instituicoes/:id`
+- `PATCH /instituicoes/:id`
+- `DELETE /instituicoes/:id`
 
+### 🐶 Pets (`/pets`)
+- `GET /pets`
+- `POST /pets`
+- `GET /pets/:id`
+- `PATCH /pets/:id`
+- `DELETE /pets/:id`
 
+### 🔥 Matches (`/matches`)
+- `GET /matches/discover/pets?usuario_id=X`
+- `GET /matches/discover/usuarios?instituicao_id=X&pet_id=Y`
+- `POST /matches/swipe/usuario`
+- `POST /matches/swipe/instituicao`
+- `GET /matches/usuario/:id`
+- `GET /matches/instituicao/:id`
 
+### 🏠 Adoções (`/adocoes`)
+- `POST /adocoes`
+- `GET /adocoes/usuario/:id`
+- `PATCH /adocoes/:id/status`
 
+### 🆘 Resgates (`/resgates`)
+- `POST /resgates/reportar`
 
+### 📦 Doações (`/doacoes`)
+- `POST /doacoes`
+- `GET /doacoes/instituicao/:id`
 
+### 📍 Endereços (`/enderecos`)
+- `GET /enderecos`
+- `POST /enderecos`
+- `GET /enderecos/:id`
 
+---
 
+## 🗄️ Modelo de Banco
 
+O sistema utiliza tabelas como:
 
+- **USUARIOS**
+- **INSTITUICOES**
+- **ENDERECOS**
+- **PETS**
+- **PROCESSO_ADOCAO**
+- **MATCHES**
+- **SWIPES**
+- **REPORTES_RESGATE**
+- **DOACOES**
+- **TIPOS_DOACAO**
 
-
+---
