@@ -21,8 +21,12 @@ describe('PetBusiness', () => {
   });
 
   it('criarPet insere e retorna dados', async () => {
-    const insert = jest.fn().mockResolvedValue([123]);
-    mockedDb.mockReturnValue({ insert } as any);
+    // Correção: Mockar o encadeamento .insert().returning()
+    const mockReturning = jest.fn().mockResolvedValue([{ id: 123 }]);
+    const mockInsert = jest.fn().mockReturnValue({ returning: mockReturning });
+    
+    mockedDb.mockReturnValue({ insert: mockInsert } as any);
+    
     const res = await petBusiness.criarPet({ name: 'P', type: 'C', owner_id: 10 });
     expect(res).toMatchObject({ id: 123, name: 'P', type: 'C', owner_id: 10 });
   });
@@ -67,4 +71,3 @@ describe('PetBusiness', () => {
     expect(await petBusiness.deletarPet(2)).toBe(false);
   });
 });
-

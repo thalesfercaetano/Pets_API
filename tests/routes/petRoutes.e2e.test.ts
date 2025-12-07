@@ -18,8 +18,12 @@ describe("E2E /pets", () => {
   afterEach(async () => {
     if (!dbReady) return;
     try {
+      await db("MATCHES").del();
+      await db("SWIPES").del();
       await db("PROCESSO_ADOCAO").del();
-      await db("PETS").del();
+      await db("REQUISITOS_ADOCAO").del();
+      await db("FOTOS_PET").del();
+      await db("PETS").del(); // Deletar Pets antes de Instituições
       await db("INSTITUICOES").del();
     } catch (error) {
       console.error("Falha ao limpar tabelas (pets):", error);

@@ -13,12 +13,16 @@ describe('E2E /enderecos', () => {
   afterEach(async () => {
     if (!dbReady) return;
     try {
-      await db('ENDERECOS').del();
-      await db('USUARIOS').del();
-      await db('INSTITUICOES').del();
+      await db("MATCHES").del();
+      await db("SWIPES").del();
+      await db("PROCESSO_ADOCAO").del();
+      await db("DOACOES").del();
+      await db("PETS").del();
+      await db("USUARIOS").del();
+      await db("INSTITUICOES").del();
+      await db("ENDERECOS").del(); // Endereços por último
     } catch (e) { console.error(e); }
   });
-
   afterAll(async () => {
     try { await db.destroy(); } catch (e) { console.error(e); }
   });

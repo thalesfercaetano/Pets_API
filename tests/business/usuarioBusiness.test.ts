@@ -28,12 +28,15 @@ describe('Testes para UsuarioBusiness', () => {
     it('deve criar um novo usuário com sucesso', async () => {
       // 1. Simular o Knex
       const mockFirst = jest.fn();
-      const mockInsert = jest.fn().mockResolvedValue([1]);
+      
+      // CORREÇÃO: Mock para suportar .insert().returning()
+      const mockReturning = jest.fn().mockResolvedValue([{ id: 1 }]);
+      const mockInsert = jest.fn().mockReturnValue({ returning: mockReturning });
 
       // Definimos a sequência de retornos para 'first()'
       mockFirst
-        .mockResolvedValueOnce(undefined)
-        .mockResolvedValueOnce({
+        .mockResolvedValueOnce(undefined) // Para a verificação de email existente (não existe)
+        .mockResolvedValueOnce({          // Para o retorno do usuário criado (não usado mais, pois pegamos do returning, mas mantido por segurança)
           id: 1,
           nome: 'Usuário Teste',
           email: 'teste@exemplo.com',
@@ -63,7 +66,10 @@ describe('Testes para UsuarioBusiness', () => {
       expect(resultado).toBeDefined();
       expect(resultado.id).toBe(1);
       expect(resultado.name).toBe('Usuário Teste');
+      
+      // Ajuste: O mock do knex é chamado com a tabela 'USUARIOS'
       expect(mockedDb).toHaveBeenCalledWith('USUARIOS');
+      
       expect(mockedBcrypt.hash).toHaveBeenCalledWith('senha123', 10);
       expect(mockInsert).toHaveBeenCalledWith({
         nome: 'Usuário Teste',
@@ -174,4 +180,3 @@ describe('Testes para UsuarioBusiness', () => {
     });
   });
 });
-

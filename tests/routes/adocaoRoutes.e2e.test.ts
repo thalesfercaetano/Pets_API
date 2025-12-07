@@ -26,7 +26,7 @@ describe("E2E /adocoes", () => {
       console.error("Falha limpar (adocoes):", e);
     }
   });
-
+  
   afterAll(async () => {
     try {
       await db.destroy();

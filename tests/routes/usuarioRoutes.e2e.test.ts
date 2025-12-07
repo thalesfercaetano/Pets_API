@@ -22,7 +22,12 @@ describe('Testes E2E para /usuarios', () => {
   afterEach(async () => {
     if (!dbReady) return;
     try {
-      await db('USUARIOS').del();
+      await db("MATCHES").del();
+      await db("SWIPES").del();
+      await db("PROCESSO_ADOCAO").del();
+      await db("DOACOES").del();
+      await db("REPORTES_RESGATE").del(); // Adicionado pois pode ter ligação
+      await db("USUARIOS").del();
     } catch (error) {
       console.error('Falha ao limpar tabela USUARIOS:', error);
     }

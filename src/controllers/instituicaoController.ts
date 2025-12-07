@@ -14,7 +14,7 @@ export class InstituicaoController {
       
       res.status(200).json(instituicoes);
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao listar instituições:", error);
       res.status(500).send("Erro ao listar instituições");
     }
   }
@@ -41,7 +41,7 @@ export class InstituicaoController {
       
       res.status(201).json(novaInstituicao);
     } catch (error: any) {
-      console.error(error);
+      console.error("Erro ao criar instituição:", error);
       
       if (error.message === "Email já cadastrado" || error.message === "CNPJ já cadastrado") {
         res.status(409).send(error.message);
@@ -53,7 +53,7 @@ export class InstituicaoController {
     }
   }
 
-  // Rota GET /instituicoes/:id - Busca uma instituição pelo seu ID
+  // Rota GET /instituicoes/:id - Busca uma instituição específica pelo seu ID
   async buscarInstituicaoPorId(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
@@ -75,11 +75,13 @@ export class InstituicaoController {
       if (instituicao) {
         res.status(200).json(instituicao);
       } else {
+        // Se não encontrou, retorna 404
         res.status(404).send("Instituição não encontrada");
       }
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Erro ao buscar instituição");
+    } catch (error: any) {
+      // Log do erro real para debug no terminal
+      console.error("Erro ao buscar instituição por ID:", error);
+      res.status(500).send(error.message || "Erro ao buscar instituição");
     }
   }
 
@@ -117,7 +119,7 @@ export class InstituicaoController {
         res.status(404).send("Instituição não encontrada");
       }
     } catch (error: any) {
-      console.error(error);
+      console.error("Erro ao atualizar instituição:", error);
       
       if (
         error.message === "Email já está em uso por outra instituição" ||
@@ -155,9 +157,8 @@ export class InstituicaoController {
         res.status(404).send("Instituição não encontrada");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao deletar instituição:", error);
       res.status(500).send("Erro ao deletar instituição");
     }
   }
 }
-

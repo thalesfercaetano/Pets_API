@@ -18,23 +18,17 @@ describe("E2E /adocoes", () => {
   afterEach(async () => {
     if (!dbReady) return;
     try {
+      await db("DOACOES").del(); // Limpar doações primeiro
       await db("PROCESSO_ADOCAO").del();
       await db("PETS").del();
       await db("USUARIOS").del();
       await db("INSTITUICOES").del();
+      await db("TIPOS_DOACAO").del();
     } catch (e) {
-      console.error("Falha limpar (adocoes):", e);
+      console.error("Falha limpar (doacoes):", e);
     }
   });
-
-  afterAll(async () => {
-    try {
-      await db.destroy();
-    } catch (e) {
-      console.error(e);
-    }
-  });
-
+  
   describe("POST /adocoes", () => {
     it("cria solicitação com sucesso (201)", async () => {
       if (!dbReady) {
