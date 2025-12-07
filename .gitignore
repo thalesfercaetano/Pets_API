@@ -1,9 +1,10 @@
 # Dependências
-node_modules/
+node_modules
 
 # Build / Compilados
 dist/
 build/
+coverage/
 
 # Variáveis de Ambiente (CRÍTICO: nunca commitar o .env real)
 .env
