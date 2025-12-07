@@ -169,3 +169,195 @@ O sistema utiliza tabelas como:
 - **TIPOS_DOACAO**
 
 ---
+
+## 🧪 Como Testar (Postman/Insomnia)
+
+Para testar a API, certifique-se de que o servidor esteja rodando:
+
+```bash
+npm run dev
+```
+
+A URL base padrão é:
+
+```
+http://localhost:3003
+```
+
+Sempre envie as requisições com:
+
+```
+Content-Type: application/json
+```
+
+---
+
+## 1. 📍 Endereços
+
+Crie um endereço primeiro (pois usuários e instituições podem depender dele).
+
+### **POST** `/enderecos`
+
+```json
+{
+  "rua": "Av. Paulista",
+  "numero": "1000",
+  "complemento": "Apto 10",
+  "bairro": "Bela Vista",
+  "cidade": "São Paulo",
+  "estado": "SP",
+  "cep": "01310100",
+  "latitude": -23.561684,
+  "longitude": -46.655981
+}
+```
+
+---
+
+## 2. 👤 Usuários
+
+### **POST** `/usuarios` — Criar Usuário
+
+```json
+{
+  "name": "João da Silva",
+  "email": "joao@email.com",
+  "password": "senhaSegura123"
+}
+```
+
+### **POST** `/usuarios/login` — Login
+
+```json
+{
+  "email": "joao@email.com",
+  "password": "senhaSegura123"
+}
+```
+
+---
+
+## 3. 🏢 Instituições
+
+### **POST** `/instituicoes`
+
+```json
+{
+  "nome": "ONG Amigos de Patas",
+  "email": "contato@amigosdepatas.com.br",
+  "cnpj": "12345678000199",
+  "telefone": "11988887777",
+  "link_site": "https://amigosdepatas.com.br",
+  "descricao": "Resgatamos animais de rua.",
+  "endereco_id": 1
+}
+```
+
+---
+
+## 4. 🐶 Pets
+
+### **POST** `/pets`
+
+```json
+{
+  "name": "Thor",
+  "type": "Cachorro",
+  "owner_id": 1,
+  "vacinado": true,
+  "castrado": true,
+  "cor": "Marrom"
+}
+```
+
+### **PATCH** `/pets/:id`
+
+```json
+{
+  "name": "Thor - Adotado",
+  "ativo": false
+}
+```
+
+---
+
+## 5. ❤️ Sistema de Matches (Tinder Pet)
+
+### **POST** `/matches/swipe/usuario`
+
+```json
+{
+  "usuario_id": 1,
+  "pet_id": 1,
+  "tipo": "like"
+}
+```
+
+### **POST** `/matches/swipe/instituicao`
+
+```json
+{
+  "instituicao_id": 1,
+  "usuario_id": 1,
+  "pet_id": 1,
+  "tipo": "like"
+}
+```
+
+### **GET** `/matches/discover/pets?usuario_id=1`
+Listar pets para o usuário dar like/pass.
+
+---
+
+## 6. 🏠 Adoções
+
+### **POST** `/adocoes`
+
+```json
+{
+  "usuario_id": 1,
+  "pet_id": 1
+}
+```
+
+### **PATCH** `/adocoes/:id/status`
+
+```json
+{
+  "status": "aprovada"
+}
+```
+
+_Status possíveis: `pendente`, `aprovada`, `recusada`_
+
+---
+
+## 7. 🆘 Resgates
+
+### **POST** `/resgates/reportar`
+
+```json
+{
+  "descricao": "Cachorro abandonado próximo ao mercado",
+  "localizacao": "Rua das Flores, 123",
+  "status": "ferido"
+}
+```
+
+---
+
+## 8. 📦 Doações
+
+### **POST** `/doacoes`
+
+```json
+{
+  "usuario_id": 1,
+  "instituicao_id": 1,
+  "tipo_doacao_id": 1,
+  "quantidade": 10.5,
+  "status_entrega": "pendente"
+}
+```
+
+---
